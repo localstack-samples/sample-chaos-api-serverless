@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  localstack:
+    networks:
+      - ls_network
+    container_name: localstack
+    image: localstack/localstack-pro:latest
+    ports:
+      - "127.0.0.1:4566:4566"            
+      - "127.0.0.1:4510-4559:4510-4559"  
+      - "127.0.0.1:443:443"
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - LOCALSTACK_HOST=localstack
+      - LAMBDA_DOCKER_NETWORK=ls_network
+      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN:?}
+      - LAMBDA_RUNTIME_ENVIRONMENT_TIMEOUT=60
+      - EXTENSION_AUTO_INSTALL=localstack-extension-outages
+      - LAMBDA_RUNTIME_ENVIRONMENT_TIMEOUT=600
+    volumes:
+      - "./volume:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./lambda-functions/target/product-lambda.jar:/etc/localstack/init/ready.d/target/product-lambda.jar"
+      - "./init-resources.sh:/etc/localstack/init/ready.d/init-resources.sh"
+
+networks:
+  ls_network:
+    name: ls_network
