@@ -1,6 +1,6 @@
-# Simulating outages for local cloud apps with LocalStack!
+# Simulating outages for local cloud apps with LocalStack's Chaos API
 
-LocalStack's [Outages extension](https://pypi.org/project/localstack-extension-outages/) enables you to start a local outage, right on your developer machine. In this demo, we set up an HTTP CRUD API functioning as a Product Management System, and use the Outages extension to simulate an outage in the DynamoDB table. We'll further use `pytest` to test the application's behavior during the outage. For a more detailed walkthrough, check out our [Simulating Outages for Local Cloud Apps with LocalStack]() blog.
+LocalStack's [Chaos API](https://docs.localstack.cloud/user-guide/chaos-engineering/chaos-api/) enables you to simulate a local outage, right on your developer machine. In this demo, we set up an HTTP CRUD API functioning as a Product Management System, and use the Chaos API to simulate an outage in the DynamoDB table. We'll further use `pytest` to test the application's behavior during the outage.
 
 ## Architecture
 
@@ -41,9 +41,8 @@ docker-compose up
 
 The Docker Compose configuration will:
 
-* Install the Outages extension.
-* Create your cloud infrastructure.
 * Start the LocalStack container.
+* Create your cloud infrastructure.
 
 ### Test the infrastructure
 
@@ -73,7 +72,7 @@ You can navigate to the [DynamoDB Resource Browser](https://app.localstack.cloud
 You can simulate an outage in your local DynamoDB table by running the following command:
 
 ```bash
-curl --location --request POST 'http://outages.localhost.localstack.cloud:4566/outages' \
+curl --location --request POST 'http://localhost.localstack.cloud:4566/_localstack/chaos/faults' \
   --header 'Content-Type: application/json' \
   --data '
   [
@@ -114,7 +113,7 @@ A DynamoDB error occurred. Message sent to queue.
 To stop the outage, run the following command:
 
 ```bash
-curl --location --request POST 'http://outages.localhost.localstack.cloud:4566/outages' \
+curl --location --request POST 'http://localhost.localstack.cloud:4566/_localstack/chaos/faults' \
   --header 'Content-Type: application/json' \
   --data '[]'
 ```
