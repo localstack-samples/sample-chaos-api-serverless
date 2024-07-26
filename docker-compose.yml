@@ -15,8 +15,6 @@ services:
       - LOCALSTACK_HOST=localstack
       - LAMBDA_DOCKER_NETWORK=ls_network
       - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN:?}
-      - LAMBDA_RUNTIME_ENVIRONMENT_TIMEOUT=60
-      - EXTENSION_AUTO_INSTALL=localstack-extension-outages
       - LAMBDA_RUNTIME_ENVIRONMENT_TIMEOUT=600
     volumes:
       - "./volume:/var/lib/localstack"
