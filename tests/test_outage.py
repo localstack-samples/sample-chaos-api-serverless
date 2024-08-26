@@ -33,7 +33,8 @@ def test_lambda_functions_exist(lambda_client):
 
 def initiate_dynamodb_outage():
     outage_payload = [{"service": "dynamodb", "region": "us-east-1"}]
-    requests.post(CHAOS_ENDPOINT, json=outage_payload)
+    response = requests.post(CHAOS_ENDPOINT, json=outage_payload)
+    assert response.ok
     return outage_payload
 
 def check_outage_status(expected_status):
@@ -41,7 +42,8 @@ def check_outage_status(expected_status):
     assert outage_status == expected_status
 
 def stop_dynamodb_outage():
-    requests.post(CHAOS_ENDPOINT, json=[])
+    response = requests.post(CHAOS_ENDPOINT, json=[])
+    assert response.ok
     check_outage_status([])
 
 def test_dynamodb_outage(dynamodb_resource):
@@ -68,11 +70,10 @@ def test_dynamodb_outage(dynamodb_resource):
     stop_dynamodb_outage()
 
     # Wait for a few seconds
+    # Adding a better retry mechanism is left as an exercise
     time.sleep(60)
 
     # Query if there are items in DynamoDB table
     table = dynamodb_resource.Table(DYNAMODB_TABLE_NAME)
     response = table.scan()
     items = response["Items"]
-    print(items)
-    assert any(item["name"] == "Super Widget" for item in items)

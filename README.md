@@ -89,6 +89,14 @@ The output will be:
 [{"service": "dynamodb", "region": "us-east-1"}]
 ```
 
+### Implement error handling
+
+The application is designed to handle the outage by sending a message to the SQS queue using a Lambda function. Run the following command to create the necessary resources:
+
+```bash
+./setup-solution.sh
+```
+
 You can now test the infrastructure again by running the following command:
 
 ```bash
